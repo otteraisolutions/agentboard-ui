@@ -6,7 +6,10 @@ resource "aws_lb_target_group" "ui" {
   target_type = "ip"
 
   health_check {
-    path                = "/"
+    # "/" redirige (307) a /login cuando no hay sesion (ver src/middleware.ts),
+    # y el health check del ALB no sigue redirects - /login si esta excluido del
+    # middleware y responde 200 sin necesitar sesion.
+    path                = "/login"
     healthy_threshold   = 2
     unhealthy_threshold = 3
     interval            = 15

@@ -26,10 +26,16 @@ data "aws_iam_policy_document" "github_actions_assume" {
       values   = ["sts.amazonaws.com"]
     }
 
+    # Dos formas del claim "sub": un job normal en push a main manda
+    # "ref:refs/heads/main", pero un job con "environment: production" (el apply
+    # de infra-backend.yml) manda "environment:production" en su lugar.
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repository}:ref:refs/heads/main"]
+      values = [
+        "repo:${var.github_repository}:ref:refs/heads/main",
+        "repo:${var.github_repository}:environment:production",
+      ]
     }
   }
 }
