@@ -15,14 +15,24 @@ export default function ConversationsPage({ params }: { params: Promise<{ agentK
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
-    conversationsApi
-      .list(agentKey, filters)
-      .then((page) => {
-        setItems(page.items);
-        setCursor(page.nextCursor);
-      })
-      .finally(() => setIsLoading(false));
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      setIsLoading(true);
+      conversationsApi
+        .list(agentKey, filters)
+        .then((page) => {
+          if (cancelled) return;
+          setItems(page.items);
+          setCursor(page.nextCursor);
+        })
+        .finally(() => {
+          if (!cancelled) setIsLoading(false);
+        });
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [agentKey, filters]);
 
   async function loadMore() {

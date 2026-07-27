@@ -13,18 +13,21 @@ export function AgentMetricsSummary({ agentKey, dateFrom }: { agentKey: string; 
 
   useEffect(() => {
     let cancelled = false;
-    setIsLoading(true);
-    metricsApi
-      .get(agentKey, { dateFrom })
-      .then((data) => {
-        if (!cancelled) setMetrics(data);
-      })
-      .catch(() => {
-        if (!cancelled) setMetrics(null);
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false);
-      });
+    queueMicrotask(() => {
+      if (cancelled) return;
+      setIsLoading(true);
+      metricsApi
+        .get(agentKey, { dateFrom })
+        .then((data) => {
+          if (!cancelled) setMetrics(data);
+        })
+        .catch(() => {
+          if (!cancelled) setMetrics(null);
+        })
+        .finally(() => {
+          if (!cancelled) setIsLoading(false);
+        });
+    });
     return () => {
       cancelled = true;
     };
