@@ -1,0 +1,16 @@
+# Copia este archivo a terraform.tfvars, completa los valores, y SI SUBE
+# terraform.tfvars a git (no tiene secretos - agentboard-ui no usa DB ni JWT_SECRET
+# propios, solo llama al backend server-side).
+
+aws_region  = "us-east-1"
+environment = "prod"
+
+# alb_dns_name del output de agentboard-api (sin puerto - el backend escucha en el 80).
+agentboard_api_url = "http://agentboard-api-prod-XXXXXXXXXX.us-east-1.elb.amazonaws.com"
+
+# El repo ECR se crea en este mismo apply, pero su URL es predecible - no hace falta
+# esperar a que exista para escribir esto. La imagen ":initial" todavia no existe en
+# ese punto (se construye y sube DESPUES del primer apply) - la tarea ECS va a fallar
+# temporalmente hasta que la subas, es esperado. A partir de ahi, el pipeline de
+# CI/CD la reemplaza en cada deploy con tags basados en el SHA del commit.
+container_image = "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/agentboard-ui-prod:initial"
