@@ -70,6 +70,12 @@ variable "refresh_token_ttl_days" {
   default     = 14
 }
 
+variable "cookie_secure" {
+  description = "Flag Secure de las cookies de sesion. Debe quedar en \"false\" mientras el ALB sirva solo HTTP; pasar a \"true\" cuando se agregue HTTPS/dominio propio."
+  type        = string
+  default     = "false"
+}
+
 variable "container_image" {
   description = "Imagen completa (repo:tag) a desplegar. En el primer apply usa un tag inicial construido a mano."
   type        = string

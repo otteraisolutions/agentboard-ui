@@ -7,7 +7,7 @@ const REFRESH_TOKEN_MAX_AGE_SECONDS = Number(process.env.REFRESH_TOKEN_TTL_DAYS 
 
 const baseCookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: process.env.COOKIE_SECURE === "true",
   sameSite: "lax" as const,
   path: "/",
 };

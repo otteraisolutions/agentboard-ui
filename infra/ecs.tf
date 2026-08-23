@@ -19,6 +19,7 @@ resource "aws_ecs_task_definition" "ui" {
         { name = "AGENTBOARD_API_URL", value = var.agentboard_api_url },
         { name = "REFRESH_TOKEN_TTL_DAYS", value = tostring(var.refresh_token_ttl_days) },
         { name = "PORT", value = tostring(var.container_port) },
+        { name = "COOKIE_SECURE", value = var.cookie_secure },
       ]
       logConfiguration = {
         logDriver = "awslogs"
