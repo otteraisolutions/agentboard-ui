@@ -80,3 +80,9 @@ variable "container_image" {
   description = "Imagen completa (repo:tag) a desplegar. En el primer apply usa un tag inicial construido a mano."
   type        = string
 }
+
+variable "custom_domain" {
+  description = "Dominio propio (ej. otteraisolutions.co). Vacio = sin dominio custom, solo el listener HTTP :3000. Si se define, se busca el certificado ACM ISSUED para agentboard.<custom_domain> (pedido desde agentboard-api/infra/acm.tf) y se agrega un listener HTTPS :443."
+  type        = string
+  default     = ""
+}

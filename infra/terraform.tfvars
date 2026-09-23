@@ -10,3 +10,11 @@ agentboard_api_url = "http://agentboard-api-prod-1404285574.us-east-1.elb.amazon
 # La imagen ":initial" todavia no existe en el primer apply - la tarea ECS va a
 # fallar temporalmente hasta construirla y subirla a mano, es esperado.
 container_image = "758222924965.dkr.ecr.us-east-1.amazonaws.com/agentboard-ui-prod:initial"
+
+# Certificado de agentboard.otteraisolutions.co ya ISSUED (pedido desde
+# agentboard-api/infra/acm.tf) - agrega el listener HTTPS :443.
+custom_domain = "otteraisolutions.co"
+
+# Ya hay HTTPS real via el listener :443 - las cookies de sesion pueden llevar
+# el flag Secure sin que el navegador las descarte.
+cookie_secure = "true"

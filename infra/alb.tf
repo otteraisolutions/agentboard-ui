@@ -37,3 +37,27 @@ resource "aws_lb_listener" "ui_http" {
     target_group_arn = aws_lb_target_group.ui.arn
   }
 }
+
+# Certificado pedido por agentboard-api/infra/acm.tf (el dueño del ALB) para
+# agentboard.<custom_domain>. Se busca por dominio + ISSUED en vez de pasar el ARN a
+# mano entre repos - evita acoplar el apply de ui al output exacto del apply de api.
+data "aws_acm_certificate" "ui" {
+  count       = var.custom_domain != "" ? 1 : 0
+  domain      = "agentboard.${var.custom_domain}"
+  statuses    = ["ISSUED"]
+  most_recent = true
+}
+
+resource "aws_lb_listener" "ui_https" {
+  count             = var.custom_domain != "" ? 1 : 0
+  load_balancer_arn = data.aws_lb.shared.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn   = data.aws_acm_certificate.ui[0].arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ui.arn
+  }
+}
