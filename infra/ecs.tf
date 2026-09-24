@@ -40,6 +40,11 @@ resource "aws_ecs_service" "ui" {
   desired_count   = var.desired_count
   launch_type     = "FARGATE"
 
+  # Mismo fix que agentboard-api/infra/ecs.tf: sin esto (default 0) el healthcheck
+  # puede matar la tarea antes de que Next.js termine de arrancar. Next.js arranca
+  # mucho mas rapido que Spring Boot, pero se deja margen igual por las dudas.
+  health_check_grace_period_seconds = 60
+
   network_configuration {
     subnets          = data.aws_subnets.default.ids
     security_groups  = [aws_security_group.ecs_service.id]
