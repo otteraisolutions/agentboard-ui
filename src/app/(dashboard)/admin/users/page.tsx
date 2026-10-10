@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { adminUsersApi } from "@/lib/api/adminUsers";
+import { agentsApi } from "@/lib/api/agents";
 import { AdminUser } from "@/lib/types/auth";
+import { Agent } from "@/lib/types/agent";
 import { AdminUsersTable } from "@/components/admin/AdminUsersTable";
 import { CreateAdminUserDialog } from "@/components/admin/CreateAdminUserDialog";
 
@@ -12,6 +14,7 @@ export default function AdminUsersPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [users, setUsers] = useState<AdminUser[] | null>(null);
+  const [agents, setAgents] = useState<Agent[]>([]);
 
   useEffect(() => {
     if (user && user.role !== "ADMIN") {
@@ -21,6 +24,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     adminUsersApi.list().then(setUsers).catch(() => setUsers([]));
+    agentsApi.listAll().then(setAgents).catch(() => setAgents([]));
   }, []);
 
   if (!user || user.role !== "ADMIN") {
@@ -46,11 +50,19 @@ export default function AdminUsersPage() {
               : "Solo el administrador semilla puede crear nuevos usuarios."}
           </p>
         </div>
-        {user.superAdmin && <CreateAdminUserDialog onCreated={upsert} />}
+        {user.superAdmin && <CreateAdminUserDialog agents={agents} onCreated={upsert} />}
       </div>
 
       {users === null && <p className="text-sm text-muted-foreground">Cargando usuarios...</p>}
-      {users && <AdminUsersTable users={users} currentUserId={user.id} onChange={upsert} />}
+      {users && (
+        <AdminUsersTable
+          users={users}
+          agents={agents}
+          currentUserId={user.id}
+          isSuperAdmin={user.superAdmin}
+          onChange={upsert}
+        />
+      )}
     </div>
   );
 }

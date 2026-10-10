@@ -1,10 +1,11 @@
-import { apiGet, apiPatch, apiPost } from "@/lib/api/client";
+import { apiGet, apiPatch, apiPost, apiPut } from "@/lib/api/client";
 import { AdminUser, Role } from "@/lib/types/auth";
 
 export const adminUsersApi = {
   list: () => apiGet<AdminUser[]>("/admin/users"),
-  create: (payload: { email: string; password: string; fullName: string; role: Role }) =>
+  create: (payload: { email: string; password: string; fullName: string; role: Role; agentIds: number[] }) =>
     apiPost<AdminUser>("/admin/users", payload),
   updateRole: (id: number, role: Role) => apiPatch<AdminUser>(`/admin/users/${id}/role`, { role }),
   setActive: (id: number, active: boolean) => apiPatch<AdminUser>(`/admin/users/${id}/active`, { active }),
+  updateAgents: (id: number, agentIds: number[]) => apiPut<AdminUser>(`/admin/users/${id}/agents`, { agentIds }),
 };

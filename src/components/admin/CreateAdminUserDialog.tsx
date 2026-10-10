@@ -15,16 +15,25 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AgentMultiSelect } from "@/components/admin/AgentMultiSelect";
 import { adminUsersApi } from "@/lib/api/adminUsers";
 import { AdminUser, Role } from "@/lib/types/auth";
+import { Agent } from "@/lib/types/agent";
 import { ApiError } from "@/lib/api/client";
 
-export function CreateAdminUserDialog({ onCreated }: { onCreated: (user: AdminUser) => void }) {
+export function CreateAdminUserDialog({
+  agents,
+  onCreated,
+}: {
+  agents: Agent[];
+  onCreated: (user: AdminUser) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState<Role>("VIEWER");
+  const [agentIds, setAgentIds] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,6 +42,7 @@ export function CreateAdminUserDialog({ onCreated }: { onCreated: (user: AdminUs
     setPassword("");
     setFullName("");
     setRole("VIEWER");
+    setAgentIds([]);
     setError(null);
   }
 
@@ -41,7 +51,7 @@ export function CreateAdminUserDialog({ onCreated }: { onCreated: (user: AdminUs
     setError(null);
     setIsSubmitting(true);
     try {
-      const user = await adminUsersApi.create({ email, password, fullName, role });
+      const user = await adminUsersApi.create({ email, password, fullName, role, agentIds });
       onCreated(user);
       toast.success("Usuario creado");
       setOpen(false);
@@ -98,6 +108,10 @@ export function CreateAdminUserDialog({ onCreated }: { onCreated: (user: AdminUs
                 <SelectItem value="ADMIN">Admin</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label>Agentes permitidos</Label>
+            <AgentMultiSelect agents={agents} selectedIds={agentIds} onChange={setAgentIds} />
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <DialogFooter>

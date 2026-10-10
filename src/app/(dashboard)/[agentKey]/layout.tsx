@@ -54,10 +54,33 @@ export default function AgentLayout({
 
   return (
     <AgentProvider agentKey={agentKey}>
-      <div className="flex flex-col gap-6">
-        <AgentTabs agentKey={agentKey} />
-        {children}
-      </div>
+      <AgentGuard agentKey={agentKey}>
+        <div className="flex flex-col gap-6">
+          <AgentTabs agentKey={agentKey} />
+          {children}
+        </div>
+      </AgentGuard>
     </AgentProvider>
   );
+}
+
+function AgentGuard({ agentKey, children }: { agentKey: string; children: React.ReactNode }) {
+  const { agent, isLoading } = useAgent();
+
+  if (isLoading) {
+    return <p className="text-sm text-muted-foreground">Cargando...</p>;
+  }
+
+  if (!agent) {
+    return (
+      <div className="flex flex-col gap-2">
+        <h1 className="text-2xl font-semibold">Sin acceso</h1>
+        <p className="text-sm text-muted-foreground">
+          No tienes permiso para ver el agente &quot;{agentKey}&quot; o no existe.
+        </p>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
 }

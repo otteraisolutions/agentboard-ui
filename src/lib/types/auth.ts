@@ -7,6 +7,7 @@ export interface AdminUser {
   role: Role;
   active: boolean;
   superAdmin: boolean;
+  allowedAgentKeys: string[];
   createdAt: string;
   lastLoginAt: string | null;
 }
