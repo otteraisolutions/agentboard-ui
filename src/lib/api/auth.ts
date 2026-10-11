@@ -1,4 +1,4 @@
-import { apiGet } from "@/lib/api/client";
+import { apiGet, apiPost } from "@/lib/api/client";
 import { AdminUser } from "@/lib/types/auth";
 import { ApiError } from "@/lib/api/client";
 
@@ -20,3 +20,11 @@ export async function logout(): Promise<void> {
 }
 
 export const me = () => apiGet<AdminUser>("/auth/me");
+
+export const changePassword = (currentPassword: string, newPassword: string) =>
+  apiPost<void>("/auth/change-password", { currentPassword, newPassword });
+
+export const forgotPassword = (email: string) => apiPost<void>("/auth/forgot-password", { email });
+
+export const resetPassword = (token: string, newPassword: string) =>
+  apiPost<void>("/auth/reset-password", { token, newPassword });

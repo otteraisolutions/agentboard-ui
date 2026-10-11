@@ -16,5 +16,10 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!login|api|_next/static|_next/image|favicon.ico).*)"],
+  // Excluye tambien archivos estaticos (logo.jpg, icon.jpg del favicon, etc.) -
+  // sin esto, el logo de la pantalla de login quedaba bloqueado por el redirect
+  // antes de poder autenticarse.
+  matcher: [
+    "/((?!login|forgot-password|reset-password|api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|ico|webp)$).*)",
+  ],
 };

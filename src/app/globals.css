@@ -47,12 +47,13 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Claymorphism: sombra dual (clara + oscura) que da el efecto "inflado" 3D.
-     clay-light/clay-dark se redefinen por tema en :root / .dark más abajo. */
-  --shadow-clay-sm: 3px 3px 6px var(--clay-dark), -3px -3px 6px var(--clay-light);
-  --shadow-clay: 7px 7px 16px var(--clay-dark), -6px -6px 14px var(--clay-light);
-  --shadow-clay-lg: 12px 12px 28px var(--clay-dark), -10px -10px 22px var(--clay-light);
-  --shadow-clay-inset: inset 3px 3px 7px var(--clay-dark), inset -3px -3px 7px var(--clay-light);
+  /* Sombras planas de un solo nivel (estilo dashboard denso, ej. Metabase/Retool) -
+     reemplaza el claymorphism inflado anterior. Se mantienen los mismos nombres de
+     utilidad (shadow-clay*) para no tener que tocar cada componente que las usa. */
+  --shadow-clay-sm: 0 1px 2px var(--panel-shadow);
+  --shadow-clay: 0 1px 2px var(--panel-shadow), 0 1px 1px var(--panel-shadow-soft);
+  --shadow-clay-lg: 0 2px 6px var(--panel-shadow), 0 1px 2px var(--panel-shadow-soft);
+  --shadow-clay-inset: inset 0 1px 2px var(--panel-shadow);
 }
 
 :root {
@@ -80,19 +81,22 @@
   --chart-3: oklch(0.55 0.12 240);
   --chart-4: oklch(0.75 0.13 130);
   --chart-5: oklch(0.65 0.15 80);
-  --radius: 0.75rem;
-  --sidebar: oklch(0.95 0.015 165);
-  --sidebar-foreground: oklch(0.24 0.05 240);
+  /* Radio mas chico que antes (dashboard denso en vez del clay inflado) */
+  --radius: 0.5rem;
+
+  /* Sidebar oscura (navy), como un panel de analytics - en vez de clara/clay */
+  --sidebar: oklch(0.22 0.045 240);
+  --sidebar-foreground: oklch(0.88 0.02 165);
   --sidebar-primary: oklch(0.7 0.21 163);
   --sidebar-primary-foreground: oklch(0.16 0.03 235);
-  --sidebar-accent: oklch(0.89 0.1 160);
-  --sidebar-accent-foreground: oklch(0.32 0.16 163);
-  --sidebar-border: oklch(0.9 0.015 165);
+  --sidebar-accent: oklch(0.29 0.05 238);
+  --sidebar-accent-foreground: oklch(0.95 0.02 165);
+  --sidebar-border: oklch(1 0 0 / 8%);
   --sidebar-ring: oklch(0.7 0.21 163);
 
-  /* Sombra clay clara: superficie hundida en gris-verde + realce blanco */
-  --clay-dark: oklch(0.78 0.02 165 / 45%);
-  --clay-light: oklch(1 0 0 / 90%);
+  /* Sombras planas y sutiles (ya no clay dual) */
+  --panel-shadow: oklch(0.2 0.02 240 / 8%);
+  --panel-shadow-soft: oklch(0.2 0.02 240 / 5%);
 }
 
 .dark {
@@ -120,18 +124,18 @@
   --chart-3: oklch(0.65 0.12 240);
   --chart-4: oklch(0.78 0.13 130);
   --chart-5: oklch(0.72 0.15 80);
-  --sidebar: oklch(0.17 0.035 240);
+  --sidebar: oklch(0.15 0.03 240);
   --sidebar-foreground: oklch(0.94 0.02 165);
   --sidebar-primary: oklch(0.8 0.2 163);
   --sidebar-primary-foreground: oklch(0.14 0.03 235);
-  --sidebar-accent: oklch(0.36 0.1 173);
+  --sidebar-accent: oklch(0.26 0.05 238);
   --sidebar-accent-foreground: oklch(0.9 0.19 163);
   --sidebar-border: oklch(1 0 0 / 8%);
   --sidebar-ring: oklch(0.8 0.2 163);
 
-  /* Sombra clay oscura: negro profundo hundido + tenue realce azulado */
-  --clay-dark: oklch(0 0 0 / 55%);
-  --clay-light: oklch(0.4 0.06 235 / 35%);
+  /* Sombras planas y sutiles en oscuro (ya no clay dual) */
+  --panel-shadow: oklch(0 0 0 / 35%);
+  --panel-shadow-soft: oklch(0 0 0 / 20%);
 }
 
 @layer base {

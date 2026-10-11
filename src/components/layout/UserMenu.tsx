@@ -1,6 +1,7 @@
 "use client";
 
-import { LogOut, User } from "lucide-react";
+import { useState } from "react";
+import { KeyRound, LogOut, User } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,15 +13,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ChangePasswordDialog } from "@/components/layout/ChangePasswordDialog";
 
 export function UserMenu() {
   const { user, logout } = useAuth();
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
 
   if (!user) {
     return null;
   }
 
   return (
+    <>
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
@@ -43,11 +47,17 @@ export function UserMenu() {
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => setChangePasswordOpen(true)}>
+          <KeyRound className="size-4" />
+          Cambiar contraseña
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => logout()}>
           <LogOut className="size-4" />
           Cerrar sesión
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+    <ChangePasswordDialog open={changePasswordOpen} onOpenChange={setChangePasswordOpen} />
+    </>
   );
 }
